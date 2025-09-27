@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StudentAidAssist — Financial Aid Help</title>
+  <meta name="description" content="Step-by-step guides for completing MPN, Entrance Counseling (EC), and FAFSA + a learning chatbot to answer student questions." />
+
+  <!-- Styles: neutral palette, Times New Roman -->
+  <style>
+    :root{
+      --bg:#f5f5f3; /* very neutral */
+      --card:#ffffff;
+      --muted:#6b6b6b;
+      --accent:#333333;
+      --border:#e3e3e0;
+      --accent-2:#9b9b9b;
+      --success:#2e7d32;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:"Times New Roman", Times, serif;
+      background:var(--bg);
+      color:var(--accent);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Layout */
+    .container{max-width:1100px;margin:28px auto;padding:24px;}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:8px;background:linear-gradient(180deg,#fff,#eaeaea);display:flex;align-items:center;justify-content:center;border:1px solid var(--border);font-weight:bold}
+    h1{font-size:20px;margin:0}
+    nav a{margin-left:12px;color:var(--accent-2);text-decoration:none}
+
+    /* Hero */
+    .hero{background:var(--card);padding:20px;border:1px solid var(--border);border-radius:10px;margin-bottom:18px;display:flex;flex-direction:column;gap:8px}
+    .hero p{margin:0;color:var(--muted)}
+
+    /* Grid */
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+
+    /* Cards */
+    .card{background:var(--card);padding:18px;border-radius:10px;border:1px solid var(--border)}
+    .card h2{margin-top:0;font-size:18px}
+    .muted{color:var(--muted);font-size:14px}
+
+    /* Steps */
+    .steps{list-style:none;padding:0;margin:0}
+    .step{padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px}
+    .step h3{margin:0;font-size:16px}
+    .step p{margin:6px 0}
+    .collapsible{cursor:pointer;color:var(--accent-2);font-size:14px}
+
+    /* Articles list */
+    .articles{display:flex;flex-direction:column;gap:10px}
+    .article{padding:12px;border-radius:8px;border:1px dashed var(--border);background:linear-gradient(180deg,#fff,#fcfcfc)}
+    .article h4{margin:0}
+    .article p{margin:6px 0;color:var(--muted);font-size:14px}
+
+    /* Chatbot */
+    .chat-widget{position:fixed;right:18px;bottom:18px;width:360px;max-width:92vw;z-index:999}
+    .chat-panel{display:flex;flex-direction:column;height:520px;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+    .chat-header{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .chat-body{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+    .message{max-width:78%;padding:10px;border-radius:8px}
+    .from-user{align-self:flex-end;background:#f2f2f2;border:1px solid var(--border)}
+    .from-bot{align-self:flex-start;background:#ffffff;border:1px solid var(--border)}
+    .chat-input{display:flex;padding:12px;border-top:1px solid var(--border);gap:8px}
+    .chat-input input{flex:1;padding:10px;border:1px solid var(--border);border-radius:6px}
+    .chat-input button{padding:10px 12px;border-radius:6px;border:0;background:var(--accent);color:white;cursor:pointer}
+
+    .learn-prompt{background:#fff9ec;border-left:4px solid #ffd54f;padding:10px;border-radius:6px}
+
+    /* Admin area small */
+    .admin-list{max-height:160px;overflow:auto;padding:6px;border-radius:6px;border:1px dashed var(--border)}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr}
+      .chat-panel{width:92vw;right:4%;left:4%}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">SA</div>
+        <div>
+          <h1>StudentAidAssist</h1>
+          <div class="muted">Helping students complete MPN, EC, and FAFSA — clearly & accurately</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#guides">Guides</a>
+        <a href="#articles">Articles</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero card">
+      <strong style="font-size:16px">What we do</strong>
+      <p>Step-by-step, accessible explanations for the Master Promissory Note (MPN), Entrance Counseling (EC), and FAFSA. Includes a lightweight learning chatbot that stores helpful Q&A so it improves over time.</p>
+    </section>
+
+    <main class="grid">
+      <div>
+        <section id="guides" class="card">
+          <h2>Step-by-step guides</h2>
+          <p class="muted">Click each section for a detailed breakdown. These are sample workflows that you will fill with your exact wording and legal/regulatory references.</p>
+
+          <article class="step" data-guide="mpn">
+            <h3>MPN — Master Promissory Note <span class="collapsible">[toggle]</span></h3>
+            <div class="content" style="display:none;">
+              <ol>
+                <li><strong>Gather ID:</strong> SSN, DOB, Contact info, and school details.</li>
+                <li><strong>Login:</strong> Use the federal student aid (FSA) ID at studentaid.gov.</li>
+                <li><strong>Complete borrower info:</strong> Review personal and loan terms carefully.</li>
+                <li><strong>Review repayment:</strong> Read sample repayment schedules and options.</li>
+                <li><strong>Sign:</strong> Electronically sign with your FSA ID and save a PDF copy.</li>
+              </ol>
+              <p class="muted">Tip: always print/save the signed MPN and the confirmation number.</p>
+            </div>
+          </article>
+
+          <article class="step" data-guide="ec">
+            <h3>Entrance Counseling (EC) <span class="collapsible">[toggle]</span></h3>
+            <div class="content" style="display:none;">
+              <ol>
+                <li><strong>Access EC:</strong> Go to studentaid.gov and sign in with your FSA ID.</li>
+                <li><strong>Provide school & loan info:</strong> Ensure correct school and estimated loan amounts are selected.</li>
+                <li><strong>Interactive modules:</strong> Review budgeting, repayment expectations, and responsibilities.</li>
+                <li><strong>Assessment:</strong> Complete required short quizzes to confirm understanding.</li>
+                <li><strong>Complete:</strong> Receive confirmation and note any follow-up items from your financial aid office.</li>
+              </ol>
+            </div>
+          </article>
+
+          <article class="step" data-guide="fafsa">
+            <h3>FAFSA — Free Application for Federal Student Aid <span class="collapsible">[toggle]</span></h3>
+            <div class="content" style="display:none;">
+              <ol>
+                <li><strong>Create/Use FSA ID:</strong> Applicants and (if dependent) parents each need an FSA ID.</li>
+                <li><strong>Gather documents:</strong> Tax returns, W-2s, bank statements, and records of assets.</li>
+                <li><strong>Complete sections:</strong> Student info, school list, dependency status, financials.</li>
+                <li><strong>Sign & submit:</strong> Sign with FSA ID; save confirmation and SAR/ISIR when available.</li>
+                <li><strong>Follow up:</strong> Respond promptly to verification requests from schools.</li>
+              </ol>
+              <p class="muted">Include links to authoritative sources in the final content (e.g., studentaid.gov, CSAC for CA programs).</p>
+            </div>
+          </article>
+
+        </section>
+
+        <section id="articles" class="card" style="margin-top:16px;">
+          <h2>Latest regulation & policy articles</h2>
+          <div class="muted">This section is built to pull up-to-date summaries from your chosen sources. The example below uses a placeholder fetch (see script). Replace <code>/api/articles</code> with your real feed or server endpoint.</div>
+
+          <div class="articles" id="articles-list">
+            <!-- JS will populate articles here; fallback content below -->
+            <div class="article"><h4>Sample: Federal aid adjustments (placeholder)</h4><p class="muted">Replace with live content fetched from your feed.</p></div>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h2>Services</h2>
+          <ul class="muted">
+            <li>One-on-one document walkthroughs (MPN, EC, FAFSA)</li>
+            <li>Live/remote sessions</li>
+            <li>Regulatory updates & alerts (optional subscription)</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <h2>Admin / Chatbot learning</h2>
+          <p class="muted">The chatbot stores user-submitted Q&A locally. Use the controls below to export or clear learned items.</p>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button id="export-learned">Export</button>
+            <button id="clear-learned">Clear</button>
+          </div>
+          <div style="margin-top:12px;">
+            <div class="muted">Learned entries</div>
+            <div class="admin-list" id="learned-list">(none)</div>
+          </div>
+        </div>
+
+        <div id="contact" class="card" style="margin-top:12px;">
+          <h2>Contact</h2>
+          <form id="contact-form">
+            <label class="muted">Name</label>
+            <input name="name" required style="width:100%;padding:8px;margin:6px 0;border:1px solid var(--border);border-radius:6px">
+            <label class="muted">Email</label>
+            <input name="email" type="email" required style="width:100%;padding:8px;margin:6px 0;border:1px solid var(--border);border-radius:6px">
+            <label class="muted">Message</label>
+            <textarea name="msg" required style="width:100%;padding:8px;margin:6px 0;border:1px solid var(--border);border-radius:6px"></textarea>
+            <button type="submit" style="padding:8px 12px;border-radius:6px;border:0;background:var(--accent);color:#fff;cursor:pointer">Send</button>
+          </form>
+          <div id="contact-result" class="muted" style="margin-top:8px"></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Chat widget (initially visible) -->
+  <div class="chat-widget" aria-live="polite">
+    <div class="chat-panel" role="dialog" aria-label="StudentAidAssist chatbot">
+      <div class="chat-header">
+        <strong>AidBot</strong>
+        <div style="font-size:13px;color:var(--muted)">I can answer basic financial aid questions</div>
+      </div>
+      <div class="chat-body" id="chat-body">
+        <div class="message from-bot">Hi — ask me about FAFSA, MPN, or Entrance Counseling. I learn from your corrections.</div>
+      </div>
+
+      <div class="chat-input">
+        <input id="chat-input" placeholder="Ask a question (ex: how do I sign MPN?)" />
+        <button id="chat-send">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: small client-side "learning" bot + placeholders for server/AI integration -->
+  <script>
+    // --- Data: initial FAQ (you will replace/add content) ---
+    const builtInFAQ = [
+      {q: 'how do I sign MPN', a: 'Sign the MPN at studentaid.gov using your FSA ID. Save the confirmation number and a PDF.'},
+      {q: 'what is entrance counseling', a: 'Entrance Counseling is a required online session to help you understand loan obligations and repayment.'},
+      {q: 'what documents for FAFSA', a: 'Gather your tax returns, W-2s, bank statements, and records of any untaxed income.'}
+    ];
+
+    // --- Utilities ---
+    function normalize(text){return String(text||'').trim().toLowerCase();}
+
+    // --- Simple retrieval: fuzzy keyword matching ---
+    function findAnswer(input){
+      const n = normalize(input);
+      // check learned first
+      const learned = JSON.parse(localStorage.getItem('learnedQA')||'[]');
+      for(const item of learned){ if(n.includes(normalize(item.q))) return {a:item.a, source:'learned'} }
+      for(const item of builtInFAQ){ if(n.includes(normalize(item.q))) return {a:item.a, source:'builtin'} }
+      // try word-scoring fallback
+      const words = n.split(/\s+/).filter(Boolean);
+      let best=null, bestScore=0;
+      [...learned, ...builtInFAQ].forEach(item=>{
+        const iq = normalize(item.q);
+        let score=0; words.forEach(w=>{ if(iq.includes(w)) score++ });
+        if(score>bestScore){bestScore=score;best=item}
+      });
+      if(bestScore>=2) return {a:best.a, source:'best-match'};
+      return null;
+    }
+
+    // --- Chat UI ---
+    const bodyEl = document.getElementById('chat-body');
+    const inputEl = document.getElementById('chat-input');
+    document.getElementById('chat-send').addEventListener('click',sendChat);
+    inputEl.addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat(); });
+
+    function appendMessage(text, from='bot'){
+      const div=document.createElement('div'); div.className='message '+(from==='user'?'from-user':'from-bot'); div.textContent=text; bodyEl.appendChild(div); bodyEl.scrollTop = bodyEl.scrollHeight;
+    }
+
+    function sendChat(){
+      const q = inputEl.value.trim(); if(!q) return; appendMessage(q,'user'); inputEl.value='';
+      const found = findAnswer(q);
+      if(found){ appendMessage(found.a,'bot'); }
+      else{
+        // ask user to teach
+        appendMessage('I don\'t know the exact answer. Can you provide the correct short answer? (You can skip by typing "no")','bot');
+        // wait for next user message as correction
+        waitForCorrection().then(correction=>{
+          if(!correction || normalize(correction)==='no'){
+            appendMessage('No problem — I will flag this for later review.','bot');
+            // Optionally: send this question to server for human review (placeholder)
+            // fetch('/api/report-unknown',{method:'POST',body:JSON.stringify({q})})
+          } else {
+            // store learned Q/A
+            const learned = JSON.parse(localStorage.getItem('learnedQA')||'[]');
+            learned.push({q: q, a: correction});
+            localStorage.setItem('learnedQA', JSON.stringify(learned));
+            appendMessage('Thanks — I\'ll remember that.','bot');
+            refreshLearnedList();
+          }
+        });
+      }
+    }
+
+    // Waits for the user to provide the next chat input as correction (promise)
+    function waitForCorrection(){
+      return new Promise(resolve=>{
+        function handler(e){
+          if(e.key && e.key!=='Enter') return; // only Enter or click
+          const val = inputEl.value.trim(); if(!val) return; appendMessage(val,'user'); inputEl.value='';
+          document.removeEventListener('keydown',handler);
+          resolve(val);
+        }
+        document.addEventListener('keydown',handler);
+      });
+    }
+
+    // Admin controls
+    function refreshLearnedList(){
+      const box = document.getElementById('learned-list');
+      const learned = JSON.parse(localStorage.getItem('learnedQA')||'[]');
+      if(!learned.length){ box.textContent='(none)'; return; }
+      box.innerHTML='';
+      learned.forEach((it,idx)=>{
+        const d = document.createElement('div'); d.style.padding='6px 4px'; d.style.borderBottom='1px solid var(--border)';
+        d.innerHTML = '<strong>Q:</strong> '+escapeHtml(it.q)+'<br><strong>A:</strong> '+escapeHtml(it.a)+" <button data-idx='"+idx+"' style='float:right'>delete</button>";
+        box.appendChild(d);
+      });
+      box.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',e=>{
+        const idx = Number(e.target.dataset.idx);
+        const learned = JSON.parse(localStorage.getItem('learnedQA')||'[]'); learned.splice(idx,1); localStorage.setItem('learnedQA', JSON.stringify(learned)); refreshLearnedList();
+      }));
+    }
+    function escapeHtml(str){ return String(str).replace(/[&<>\"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    document.getElementById('export-learned').addEventListener('click',()=>{
+      const learned = JSON.parse(localStorage.getItem('learnedQA')||'[]');
+      const blob = new Blob([JSON.stringify(learned, null, 2)],{type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='learnedQA.json'; a.click(); URL.revokeObjectURL(url);
+    });
+    document.getElementById('clear-learned').addEventListener('click',()=>{ localStorage.removeItem('learnedQA'); refreshLearnedList(); });
+
+    refreshLearnedList();
+
+    // --- Articles fetch placeholder ---
+    async function loadArticles(){
+      const container = document.getElementById('articles-list');
+      try{
+        // replace '/api/articles' with your server or an RSS-to-json endpoint
+        const res = await fetch('/api/articles');
+        if(!res.ok) throw new Error('no remote');
+        const json = await res.json();
+        container.innerHTML='';
+        json.articles.slice(0,6).forEach(a=>{
+          const el = document.createElement('div'); el.className='article';
+          el.innerHTML = `<h4>${escapeHtml(a.title)}</h4><p class='muted'>${escapeHtml(a.summary||a.excerpt||'')}</p><a href='${a.url}' target='_blank' rel='noopener'>Read source</a>`;
+          container.appendChild(el);
+        });
+      }catch(err){
+        // keep fallback sample article; developer should wire a reliable feed
+        console.warn('articles not loaded',err);
+      }
+    }
+    loadArticles();
+
+    // --- Collapsible guides ---
+    document.querySelectorAll('.step').forEach(step=>{
+      const toggle = step.querySelector('.collapsible');
+      toggle.addEventListener('click',()=>{
+        const content = step.querySelector('.content');
+        content.style.display = content.style.display==='none'?'block':'none';
+      });
+    });
+
+    // --- Contact form (placeholder) ---
+    document.getElementById('contact-form').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const obj = Object.fromEntries(fd.entries());
+      document.getElementById('contact-result').textContent='Sending...';
+      // Replace with your server endpoint to receive leads/messages
+      try{
+        // await fetch('/api/contact',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(obj)});
+        document.getElementById('contact-result').textContent='Message saved (demo).';
+        e.target.reset();
+      }catch(err){ document.getElementById('contact-result').textContent='Unable to send right now.' }
+    });
+
+    // NOTE: This is a frontend-only demo of a chatbot that "learns" in browser storage.
+    // For production, integrate a server and/or LLM service. Replace `findAnswer()` with
+    // a call to your backend that queries authoritative sources (and logs responses).
+
+  </script>
+</body>
+</html>
